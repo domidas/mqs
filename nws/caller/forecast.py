@@ -1,17 +1,14 @@
-import locator.lookup, requests, json, math
+import requests, json, math
 
-def fetch():
+
+def fetch(coordinates, office_id):
   print("Initializing...")
 
   base_url = "https://api.weather.gov/gridpoints/"
 
-  coordinates = locator.coordLookup()
-
   # coordLookup returns coordinates as a tuple and possibly negative values. Forecast API call does not accept negatives or floats
-  latitude = math.floor(abs(coordinates[0]))
-  longitude = math.floor(abs(coordinates[1]))
-
-  office_id = locator.officeLookup()
+  latitude = math.floor(abs(coordinates["latitude"]))
+  longitude = math.floor(abs(coordinates["longitude"]))
 
   # piece URL together and prepare to make calls
   complete_url = base_url + office_id + "/" + str(longitude) + "," + str(latitude) + "/forecast"
