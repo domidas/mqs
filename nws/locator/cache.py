@@ -1,34 +1,26 @@
-import os
+import os, ast
 
 class Cache:
-  def __init__(self, address, zipcode):
-    
 
-  def addressCacheCreate(self):
-    address_file = open("./address.txt", mode='w')
-    address = input("Please enter a street address: ")
-    zipcode = input("Please enter a zipcode: ")
-    address_file.write(address + "\n" + zipcode)
+    def check_cache():
+        if os.path.isfile("./nws/locator/cache.txt") == True:
+            return True
+        else:
+            return False
 
-  def addressCacheCheck(self):
-    while os.path.isfile("./address.txt") == False:
-      print("No address cached. Making new file...")
-      .addressCacheCreate()
-      quit()
-    
-    address_file = open("./address.txt", mode='r')
-    content = address_file.readlines()
+    def read_cache():
+        with open("./nws/locator/cache.txt", mode='r') as cache_file:
+            cached_coords = cache_file.read()
+            # must be converted back to dict if office_lookup will work
+            try:
+                dict_coords = ast.literal_eval(cached_coords)
+            except SyntaxError:
+                raise ValueError('ERROR: cache.txt cannot be empty. Please delete file and try again.')
+        return dict_coords
 
-    # index error is thrown if file is empty; may have bungled this
-    try:
-      address = content[0]
-      zipcode = content[1]
-    except IndexError as indexError:
-      raise ValueError('ERROR: Could not open address.txt; File empty or malformed. Please check ' + os.path.abspath("address.txt")) from indexError
-  
-    ch = input("Cached address detected. Do you wish to use address " + address + " and zipcode " + zipcode + "? [Y/N]: ").upper()
-    if ch == "Y":
-      address_file.close
-    elif ch == "N":
-      .addressCacheCreate()
-      quit()
+    def write_cache(coordinates):
+        cache_file = open("./nws/locator/cache.txt", mode='w')
+        cache_file.write(str(coordinates))
+
+    def delete_cache():
+        os.remove("./nws/locator/cache.txt")

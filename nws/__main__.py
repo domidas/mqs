@@ -1,4 +1,4 @@
-import caller.forecast 
+import os, caller.forecast 
 from locator.lookup import Lookup
 print("Welcome to the Meteorological Query System")
 print("1: Forecast Query \n\
@@ -6,6 +6,7 @@ print("1: Forecast Query \n\
 choice = str(input())
 
 if choice == "1":
+  # need to figure out a way to make it to where if cache exists, don't ask for address or something idk
   address = input("Please enter an address: ")
   zipcode = input("Please enter the corresponding zip code: ")
   coordinates = Lookup.coordLookup(address, zipcode)

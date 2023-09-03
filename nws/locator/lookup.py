@@ -1,26 +1,23 @@
 import requests, json, urllib.parse 
-#from .cache import Cache
+from .cache import Cache
 
 class Lookup:
     
   def coordLookup(address, zipcode):
+    
+    # check to see if cache exists
+    while Cache.check_cache() == True:
+        cached_coords = Cache.read_cache()
+        ch = input("Cached coordinates found. Do you wish to use " + str(cached_coords) + "? [Y/N]: ").upper()
+
+        if ch == "Y":
+            return cached_coords
+        elif ch == "N":
+            Cache.delete_cache()
 
     base_url = "https://geocoding.geo.census.gov/geocoder/locations/address?"
 
-    # the cache functions do NOT use return. This is so I don't have to type return each time for each condition (file does/does not exist, file will/will not be used
-    # coordLookup just reads the cached file.
-    #  Cache.addressCacheCheck()
-
-    #  cache_file = open("./address.txt", mode='r')
-    #  cache_file_contents = address_file.readlines()
-    #  address = cache_file_contents[0]
-    #  zipcode = cache_file_contents[1]
-
-    #address = input("Please enter an address: ")
-    #zipcode = input("Please enter the corresponding zip code: ")
-
     # make spaces in address +'s
-
     formatted_address = urllib.parse.quote_plus(address)
 
     complete_url = base_url + "street=" + formatted_address + "&zip=" + zipcode +   "&benchmark=Public_AR_Current" + "&format=json"
@@ -38,8 +35,6 @@ class Lookup:
     elif x["result"]["addressMatches"] == []:
       print("Address not found.")
 
-    #print(x)
-
     p = x["result"]["addressMatches"][0]["coordinates"]
 
     latitude = (p["y"])
@@ -50,6 +45,9 @@ class Lookup:
       "latitude": latitude,
       "longitude": longitude
      }
+
+    # cache coordinates
+    Cache.write_cache(coordinates)
 
     return coordinates
 
@@ -69,5 +67,7 @@ class Lookup:
       print("ERROR: Unexpected reply. Server replies status " + status + " with error message " + detail)
 
     office_id = x["properties"]["gridId"]
+
     print("The Forecasting Office ID for your area is: " + office_id)
+
     return office_id

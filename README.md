@@ -1,3 +1,6 @@
+# NOTE: 
+This project is on an indefinite hiatus due to the National Weather Service's official specification on the [status](https://www.weather.gov/documentation/services-web-api) of their API. 
+
 # Meteorological Query System
 This project is a successor to weather-seeker, which was shackled by using a paid API with limited access to information.
 
@@ -11,5 +14,3 @@ These include:
 from root directory:  
 `python3 nws`
 
-# Note:
-tool is currently broken because of problems with cache functions
